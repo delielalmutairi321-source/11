@@ -1,0 +1,356 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>نشاط المخطط الانسيابي</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: one centered column. Start card -> one question per screen with instant feedback -> a single result card that fits one phone screenshot. Colors come from the lesson's own flowchart shapes. */
+:root{
+  --bg:#FBF3F6;
+  --surface:#FFFFFF;
+  --fg:#2B1A24;
+  --muted:#6B5662;
+  --accent:#C63065;
+  --accent-ink:#FFFFFF;
+  --blue:#17789F;
+  --line:#EAD2DC;
+  --good:#17703F;
+  --good-bg:#E2F4E9;
+  --bad:#AE2A22;
+  --bad-bg:#FBE4E1;
+  --sh-oval:#D8CFD8;
+  --sh-io:#CFE0A8;
+  --sh-proc:#F2D4A8;
+  --sh-dec:#BCCBE0;
+  --sh-stroke:#8A6F7D;
+  --star:#E9A21B;
+  --display:"Lalezar","Tajawal",system-ui,"Segoe UI",Tahoma,sans-serif;
+  --text:"Tajawal",system-ui,"Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1C1218;--surface:#2A1B23;--fg:#F8EBF1;--muted:#C4AAB7;--accent:#D13A68;--accent-ink:#FFFFFF;
+    --blue:#6CC3E8;--line:#4B3441;--good:#79D6A0;--good-bg:#1F3A2D;--bad:#FF9A92;--bad-bg:#47221F;
+    --sh-oval:#5B4A5C;--sh-io:#5C6E3F;--sh-proc:#85693A;--sh-dec:#45607F;--sh-stroke:#BFA7B3;--star:#F2B544;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1C1218;--surface:#2A1B23;--fg:#F8EBF1;--muted:#C4AAB7;--accent:#D13A68;--accent-ink:#FFFFFF;
+  --blue:#6CC3E8;--line:#4B3441;--good:#79D6A0;--good-bg:#1F3A2D;--bad:#FF9A92;--bad-bg:#47221F;
+  --sh-oval:#5B4A5C;--sh-io:#5C6E3F;--sh-proc:#85693A;--sh-dec:#45607F;--sh-stroke:#BFA7B3;--star:#F2B544;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg);color:var(--fg);font-family:var(--text);font-size:18px;line-height:1.7;
+  padding-block:20px 32px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.app{max-width:640px;margin-inline:auto;display:flex;flex-direction:column;gap:16px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-size:26px;line-height:1.2;color:var(--blue);margin:0}
+.step{font-size:15px;font-weight:700;color:var(--muted)}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:22px 20px;min-width:0}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;line-height:1.35}
+h1{font-size:32px;color:var(--accent)}
+h2{font-size:25px}
+p{margin:0}
+.lead{color:var(--muted);font-size:17px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.flow-art{width:100%;height:auto;max-width:360px;align-self:center}
+.flow-art *{vector-effect:non-scaling-stroke}
+label.fld{font-weight:800;font-size:18px}
+input.name{
+  width:100%;font:inherit;font-size:20px;font-weight:700;padding:14px 16px;border-radius:14px;
+  border:2px solid var(--line);background:var(--bg);color:var(--fg);
+}
+input.name::placeholder{color:var(--muted);font-weight:400}
+.err{color:var(--bad);font-weight:700;font-size:16px;min-height:1.5em}
+button{font:inherit;cursor:pointer}
+.btn{
+  background:var(--accent);color:var(--accent-ink);border:0;border-radius:14px;padding:14px 22px;
+  font-size:20px;font-weight:800;min-height:54px;width:100%;
+}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .35s ease}
+.qshape{display:flex;justify-content:center;padding:6px 0 2px}
+.opts{display:grid;gap:10px;margin-top:6px}
+.opt{
+  display:flex;align-items:center;gap:12px;text-align:right;width:100%;
+  background:var(--surface);color:var(--fg);border:2px solid var(--line);border-radius:14px;
+  padding:12px 14px;font-size:19px;font-weight:700;min-height:56px;
+}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .lt{
+  flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--bg);border:1.5px solid var(--line);font-size:16px;font-weight:800;color:var(--muted)
+}
+.opt .tx{flex:1;min-width:0}
+.opt .ic{flex:none;width:26px;height:26px;display:none}
+.opt:disabled{cursor:default}
+.opt.correct{background:var(--good-bg);border-color:var(--good);color:var(--fg)}
+.opt.correct .ic{display:block;color:var(--good)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad)}
+.opt.wrong .ic{display:block;color:var(--bad)}
+.opt.dim{opacity:.55}
+.fb{border-radius:14px;padding:14px 16px;font-size:17px}
+.fb b{display:block;font-size:19px;margin-bottom:2px}
+.fb.ok{background:var(--good-bg);color:var(--fg)}
+.fb.ok b{color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--fg)}
+.fb.no b{color:var(--bad)}
+/* result */
+.result{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.stars{display:flex;gap:6px;direction:ltr}
+.stars svg{width:34px;height:34px}
+.who{font-family:var(--display);font-size:34px;line-height:1.2;color:var(--accent);word-break:break-word}
+.tag{font-size:15px;font-weight:700;color:var(--muted)}
+.score{display:flex;align-items:baseline;gap:8px;justify-content:center;font-variant-numeric:tabular-nums}
+.score .n{font-family:var(--display);font-size:72px;line-height:1;color:var(--fg)}
+.score .of{font-size:22px;font-weight:700;color:var(--muted)}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dot{width:26px;height:26px;border-radius:50%;display:grid;place-items:center}
+.dot.y{background:var(--good-bg);color:var(--good)}
+.dot.n{background:var(--bad-bg);color:var(--bad)}
+.dot svg{width:16px;height:16px}
+.msg{font-size:20px;font-weight:800;text-wrap:balance}
+.snap{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:right;
+  border:2px dashed var(--accent);border-radius:16px;padding:12px 14px;background:var(--bg)
+}
+.snap svg{flex:none;width:36px;height:36px;color:var(--accent)}
+.snap p{font-size:18px;font-weight:800;line-height:1.5}
+.when{font-size:14px;color:var(--muted)}
+.enter{animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.enter{animation:none}.bar>i{transition:none}}
+@media (max-width:420px){h1{font-size:28px}.score .n{font-size:64px}}
+</style>
+
+<main class="app" dir="rtl" lang="ar">
+  <div class="top">
+    <p class="brand">المخطط الانسيابي</p>
+    <span class="step" id="step" hidden></span>
+  </div>
+
+  <!-- Start -->
+  <section class="card stack enter" id="start">
+    <svg class="flow-art" viewBox="0 0 360 80" role="img" aria-label="أشكال المخطط الانسيابي متصلة بأسهم">
+      <g fill="none" stroke="var(--sh-stroke)" stroke-width="2">
+        <path d="M262 40H238M238 40l7-5M238 40l7 5"/>
+        <path d="M178 40H154M154 40l7-5M154 40l7 5"/>
+        <path d="M94 40H72M72 40l7-5M72 40l7 5"/>
+      </g>
+      <rect x="270" y="22" width="86" height="36" rx="18" fill="var(--sh-oval)" stroke="var(--sh-stroke)" stroke-width="1.5"/>
+      <polygon points="198,58 246,58 258,22 210,22" transform="translate(-34 0)" fill="var(--sh-io)" stroke="var(--sh-stroke)" stroke-width="1.5"/>
+      <rect x="100" y="22" width="64" height="36" fill="var(--sh-proc)" stroke="var(--sh-stroke)" stroke-width="1.5" transform="translate(-6 0)"/>
+      <polygon points="38,6 70,40 38,74 6,40" fill="var(--sh-dec)" stroke="var(--sh-stroke)" stroke-width="1.5"/>
+    </svg>
+    <h1>نشاط المخطط الانسيابي</h1>
+    <p class="lead">عشرة أسئلة سهلة. بعد كل سؤال تظهر لك تغذية راجعة تشرح الإجابة، وفي النهاية تظهر نتيجتك.</p>
+    <form class="stack" id="nameForm" novalidate>
+      <label class="fld" for="studentName">اكتبي اسمك</label>
+      <input class="name" id="studentName" type="text" maxlength="40" autocomplete="off" placeholder="مثال: نورة أحمد">
+      <p class="err" id="nameErr" role="alert"></p>
+      <button class="btn" type="submit">ابدئي النشاط</button>
+    </form>
+  </section>
+
+  <!-- Quiz -->
+  <section class="card stack" id="quiz" hidden>
+    <div class="bar" aria-hidden="true"><i id="barFill" style="width:0"></i></div>
+    <div class="qshape" id="qshape" hidden></div>
+    <h2 id="qtext"></h2>
+    <div class="opts" id="opts"></div>
+    <div id="fbWrap" aria-live="polite"></div>
+    <button class="btn" id="nextBtn" type="button" hidden>التالي</button>
+  </section>
+
+  <!-- Result -->
+  <section id="result" class="stack" hidden>
+    <div class="card result enter">
+      <div class="stars" id="stars" aria-hidden="true"></div>
+      <p class="tag">نتيجة الطالبة</p>
+      <p class="who" id="rName"></p>
+      <div class="score" aria-live="polite"><span class="n" id="rScore"></span><span class="of" id="rOf"></span></div>
+      <div class="dots" id="rDots" aria-label="تفاصيل الإجابات"></div>
+      <p class="msg" id="rMsg"></p>
+      <div class="snap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.6-2.4h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.6"/></svg>
+        <p>صوّري الشاشة وأرسليها للأستاذة دلال في الدردشة</p>
+      </div>
+      <p class="when" id="rWhen"></p>
+    </div>
+    <button class="btn ghost" id="again" type="button">إعادة المحاولة</button>
+  </section>
+</main>
+
+<script>
+(function () {
+  var Q = [
+    { t: "ما اسم المخطط الذي يعرض خطوات حل المشكلة بالترتيب الصحيح؟",
+      o: ["المخطط الدائري", "المخطط الانسيابي", "مخطط الأعمدة"], a: 1,
+      f: "المخطط الانسيابي (Flowchart) يعرض حل المشكلة خطوة بخطوة وبصورة واضحة." },
+    { t: "المخطط الانسيابي يُستخدم لتمثيل ماذا؟",
+      o: ["الخوارزمية", "الألوان", "الأصوات"], a: 0,
+      f: "هو نوع من المخططات البيانية يُستخدم لتمثيل الخوارزمية." },
+    { s: "oval", t: "ماذا يعني هذا الشكل في المخطط الانسيابي؟",
+      o: ["اتخاذ قرار", "البداية / النهاية", "العمليات"], a: 1,
+      f: "الشكل البيضاوي يشير إلى بداية المقطع البرمجي ونهايته." },
+    { s: "io", t: "ماذا يعني هذا الشكل (متوازي الأضلاع)؟",
+      o: ["الإدخال / الإخراج", "البداية / النهاية", "اتخاذ قرار"], a: 0,
+      f: "نستخدمه لاستقبال البيانات التي سيتم معالجتها وعرضها (إدخال وإخراج)." },
+    { s: "proc", t: "ماذا يعني هذا الشكل (المستطيل)؟",
+      o: ["الإدخال / الإخراج", "العمليات", "اتخاذ قرار"], a: 1,
+      f: "المستطيل يمثل العمليات، أي تنفيذ عملية رياضية." },
+    { s: "dec", t: "ماذا يعني هذا الشكل (المعين)؟",
+      o: ["العمليات", "البداية / النهاية", "اتخاذ قرار"], a: 2,
+      f: "المعين يُستخدم لاتخاذ القرارات (نعم أو لا) أو لاختبارات التحقق (صواب أو خطأ)." },
+    { t: "ماذا نستخدم لربط الأشكال وإظهار ترتيب الخطوات؟",
+      o: ["الألوان", "الأرقام فقط", "الأسهم"], a: 2,
+      f: "نربط الأشكال بالأسهم لعرض التسلسل الذي يجب تنفيذ الخطوات به." },
+    { t: "أي شكل نستخدمه لتنفيذ عملية رياضية مثل ٢ + ٣؟",
+      o: ["المستطيل", "المعين", "متوازي الأضلاع"], a: 0,
+      f: "العمليات الرياضية تُرسم داخل المستطيل." },
+    { t: "متى نرسم المخطط الانسيابي؟",
+      o: ["بعد انتهاء البرنامج", "قبل كتابة المقطع البرمجي", "لا نحتاجه أبداً"], a: 1,
+      f: "نرسمه قبل كتابة المقطع البرمجي لنصف أفكارنا في حل المشكلة باستخدام الحاسب." },
+    { t: "ماذا نفعل بالمشكلة الكبيرة عند رسم المخطط الانسيابي؟",
+      o: ["نقسمها إلى مهام أصغر", "نتركها كما هي", "نحذفها"], a: 0,
+      f: "نقسّم المشكلة إلى مهام أصغر أو تعليمات محددة، فيسهل حلها." }
+  ];
+  var LET = ["أ", "ب", "ج"];
+  var nf = new Intl.NumberFormat("ar-EG");
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  var CROSS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var STAR = '<svg viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2 6.3 20.3l1.2-6.4L2.8 9.5l6.4-.8z" fill="FILL" stroke="var(--star)" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+
+  var SHAPES = {
+    oval: '<svg width="170" height="70" viewBox="0 0 170 70" role="img" aria-label="شكل بيضاوي"><rect x="4" y="8" width="162" height="54" rx="27" fill="var(--sh-oval)" stroke="var(--sh-stroke)" stroke-width="2"/></svg>',
+    io: '<svg width="190" height="70" viewBox="0 0 190 70" role="img" aria-label="متوازي أضلاع"><polygon points="4,62 38,8 186,8 152,62" fill="var(--sh-io)" stroke="var(--sh-stroke)" stroke-width="2" stroke-linejoin="round"/></svg>',
+    proc: '<svg width="170" height="70" viewBox="0 0 170 70" role="img" aria-label="مستطيل"><rect x="4" y="10" width="162" height="50" fill="var(--sh-proc)" stroke="var(--sh-stroke)" stroke-width="2"/></svg>',
+    dec: '<svg width="150" height="90" viewBox="0 0 150 90" role="img" aria-label="معين"><polygon points="75,4 146,45 75,86 4,45" fill="var(--sh-dec)" stroke="var(--sh-stroke)" stroke-width="2" stroke-linejoin="round"/></svg>'
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var state = { name: "", i: 0, answers: [], locked: false };
+
+  function show(which) {
+    ["start", "quiz", "result"].forEach(function (k) { $(k).hidden = (k !== which); });
+    $("step").hidden = (which !== "quiz");
+    window.scrollTo(0, 0);
+  }
+
+  function renderQuestion() {
+    var q = Q[state.i];
+    state.locked = false;
+    $("step").textContent = "السؤال " + nf.format(state.i + 1) + " من " + nf.format(Q.length);
+    $("barFill").style.width = (state.i / Q.length * 100) + "%";
+    var sh = $("qshape");
+    if (q.s) { sh.innerHTML = SHAPES[q.s]; sh.hidden = false; } else { sh.innerHTML = ""; sh.hidden = true; }
+    $("qtext").textContent = q.t;
+    var box = $("opts");
+    box.innerHTML = "";
+    q.o.forEach(function (txt, idx) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "opt";
+      b.dataset.i = idx;
+      b.innerHTML = '<span class="lt"></span><span class="tx"></span><span class="ic"></span>';
+      b.querySelector(".lt").textContent = LET[idx];
+      b.querySelector(".tx").textContent = txt;
+      b.addEventListener("click", function () { choose(idx); });
+      box.appendChild(b);
+    });
+    $("fbWrap").innerHTML = "";
+    $("nextBtn").hidden = true;
+    var card = $("quiz");
+    card.classList.remove("enter");
+    void card.offsetWidth;
+    card.classList.add("enter");
+  }
+
+  function choose(idx) {
+    if (state.locked) return;
+    state.locked = true;
+    var q = Q[state.i];
+    var ok = idx === q.a;
+    state.answers.push(ok);
+    var btns = $("opts").querySelectorAll(".opt");
+    btns.forEach(function (b, n) {
+      b.disabled = true;
+      if (n === q.a) { b.classList.add("correct"); b.querySelector(".ic").innerHTML = CHECK; }
+      else if (n === idx) { b.classList.add("wrong"); b.querySelector(".ic").innerHTML = CROSS; }
+      else b.classList.add("dim");
+    });
+    var fb = document.createElement("div");
+    fb.className = "fb " + (ok ? "ok" : "no");
+    var head = document.createElement("b");
+    head.textContent = ok ? "أحسنتِ! إجابتك صحيحة" : "إجابتك غير صحيحة، والإجابة الصحيحة: " + q.o[q.a];
+    var body = document.createElement("span");
+    body.textContent = q.f;
+    fb.appendChild(head);
+    fb.appendChild(body);
+    $("fbWrap").innerHTML = "";
+    $("fbWrap").appendChild(fb);
+    $("barFill").style.width = ((state.i + 1) / Q.length * 100) + "%";
+    var nb = $("nextBtn");
+    nb.textContent = state.i === Q.length - 1 ? "عرض النتيجة" : "التالي";
+    nb.hidden = false;
+    nb.focus({ preventScroll: false });
+  }
+
+  function showResult() {
+    var score = state.answers.filter(Boolean).length;
+    $("rName").textContent = state.name;
+    $("rScore").textContent = nf.format(score);
+    $("rOf").textContent = "من " + nf.format(Q.length);
+    var filled = Math.round(score / 2);
+    var stars = "";
+    for (var s = 0; s < 5; s++) stars += STAR.replace("FILL", s < filled ? "var(--star)" : "none");
+    $("stars").innerHTML = stars;
+    var dots = "";
+    state.answers.forEach(function (ok) {
+      dots += '<span class="dot ' + (ok ? "y" : "n") + '">' + (ok ? CHECK : CROSS) + "</span>";
+    });
+    $("rDots").innerHTML = dots;
+    var msg;
+    if (score === 10) msg = "ممتاز! أنتِ خبيرة المخططات الانسيابية";
+    else if (score >= 8) msg = "رائع جداً! أداء مميز";
+    else if (score >= 6) msg = "جيد! راجعي الجدول وحاولي مرة أخرى";
+    else msg = "لا بأس، راجعي الدرس وأعيدي المحاولة";
+    $("rMsg").textContent = msg;
+    var d = "";
+    try { d = new Date().toLocaleDateString("ar-SA", { weekday: "long", day: "numeric", month: "long", year: "numeric" }); } catch (e) {}
+    $("rWhen").textContent = d;
+    show("result");
+  }
+
+  $("nameForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = $("studentName").value.replace(/\s+/g, " ").trim();
+    if (!v) { $("nameErr").textContent = "اكتبي اسمك أولاً لنبدأ."; $("studentName").focus(); return; }
+    $("nameErr").textContent = "";
+    state = { name: v, i: 0, answers: [], locked: false };
+    show("quiz");
+    renderQuestion();
+  });
+
+  $("nextBtn").addEventListener("click", function () {
+    if (state.i < Q.length - 1) { state.i++; renderQuestion(); window.scrollTo(0, 0); }
+    else showResult();
+  });
+
+  $("again").addEventListener("click", function () {
+    state = { name: state.name, i: 0, answers: [], locked: false };
+    show("quiz");
+    renderQuestion();
+  });
+})();
+</script>
+
+</body></html>
